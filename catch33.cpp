@@ -17,6 +17,7 @@ using namespace std;
 #define HERO_WIDTH  3 //(+1) starting poing
 #define HERO_Y  (GAME_HEIGHT - 2)
 #define ENEMY_START_SPEED 13 //smaller = faster
+#define HARDER_EVERY 10 //it will speed up after 33 catches
 #define LIVES 10
 
 
@@ -35,6 +36,9 @@ int enemies = 1;
 int step_counter = 0;
 int score = 0;
 int lives = 10;
+
+int catch_counter = 0;
+int game_level = 1;
 
 // Moves the cursor to a specific position
 BOOL gotoxy(const WORD x, const WORD y) {
@@ -72,7 +76,7 @@ void drawBox(int xmax , int ymax){
 void clearCharacter(int x, int y, int xDir) {
     int oldx;
     if(xDir == 0) oldx = x-1;
-    else if(xDir == 1) oldx = x+1;
+    else if(xDir == 1) oldx = x+HERO_WIDTH;
 
     gotoxy(oldx, HERO_Y);
     if(oldx >0){
@@ -163,6 +167,8 @@ void initGame(){
     step_counter = 0;
     score = 0;
     lives = LIVES;
+    catch_counter = 0;
+    game_level = 1;
 
     clearScreen();
     drawBox(GAME_WIDTH, GAME_HEIGHT);
@@ -198,10 +204,11 @@ int main(){
 
                 // refresh the enemies
                 if(enemies >= 1) {
-                    if((randcords[0] == heroXpos || randcords[0] == heroXpos+HERO_WIDTH) && enemyYPos1 == heroYPos){
+                    if((randcords[0] >= heroXpos && randcords[0] <= heroXpos+HERO_WIDTH) && enemyYPos1 == heroYPos){
                         resetEnemy(0, enemyYPos1);
                         enemyYPos1 = 2;
                         score++;
+                        catch_counter++;
                     } else if(enemyYPos1 == GAME_HEIGHT){
                         resetEnemy(0, enemyYPos1);
                         enemyYPos1 = 2;
@@ -214,12 +221,14 @@ int main(){
                     }
                     
                 }
+
                 if(enemies >= 2) {
                     
-                    if((randcords[1] == heroXpos || randcords[1] == heroXpos+HERO_WIDTH) && enemyYPos2 == heroYPos){
+                    if((randcords[1] >= heroXpos && randcords[1] <= heroXpos+HERO_WIDTH) && enemyYPos2 == heroYPos){
                         resetEnemy(1, enemyYPos2);
                         enemyYPos2 = 2;
                         score++;
+                        catch_counter++;
                     } else if(enemyYPos2 == GAME_HEIGHT){
                         resetEnemy(1, enemyYPos2);
                         enemyYPos2 = 2;
@@ -234,10 +243,11 @@ int main(){
                 }
 
                 if(enemies >= 3) {
-                    if((randcords[2] == heroXpos || randcords[2] == heroXpos+HERO_WIDTH) && enemyYPos3 == heroYPos){
+                    if((randcords[2] >= heroXpos && randcords[2] <= heroXpos+HERO_WIDTH) && enemyYPos3 == heroYPos){
                         resetEnemy(2, enemyYPos3);
                         enemyYPos3 = 2;
                         score++;
+                        catch_counter++;
                     } else if(enemyYPos3 == GAME_HEIGHT){
                         resetEnemy(2, enemyYPos3);
                         enemyYPos3 = 2;
@@ -251,10 +261,11 @@ int main(){
                 }
 
                 if(enemies >= 4) {
-                    if((randcords[3] == heroXpos || randcords[3] == heroXpos+HERO_WIDTH) && enemyYPos4 == heroYPos){
+                    if((randcords[3] >= heroXpos && randcords[3] <= heroXpos+HERO_WIDTH) && enemyYPos4 == heroYPos){
                         resetEnemy(3, enemyYPos4);
                         enemyYPos4 = 2;
                         score++;
+                        catch_counter++;
                     } else if(enemyYPos4 == GAME_HEIGHT){
                         resetEnemy(3, enemyYPos4);
                         enemyYPos4 = 2;
@@ -266,7 +277,6 @@ int main(){
                         else rotation4++;
                     }
                 }
-    
             } else {
                 step_counter++;
             }
@@ -280,11 +290,25 @@ int main(){
             }
 
             
-        
+            // make game harder
+            if(catch_counter == HARDER_EVERY){
+                catch_counter = 0;
+                game_level++;
+                enemySpeed--;
+            }
 
-            // Print Score
+            // Detect game over
+            if(lives == 0){
+                gameState = 2;
+            }
+
+            // Print Game Stats
             gotoxy(5, 2);
             cout << "Score: " << setw(3) << setfill('0') << score << endl;
+
+            gotoxy(23, 2);
+            cout << "Level: " << setw(3) << setfill('0') << game_level << endl;
+
             gotoxy(40, 2);
             if(lives <=3) {
                 SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), BACKGROUND_INTENSITY | BACKGROUND_RED);
@@ -294,12 +318,9 @@ int main(){
                 cout << "Lives: " << setw(2) << setfill('0') << lives << endl;
             }
 
-            Sleep(20);
 
-            // Detect game over
-            if(lives == 0){
-                gameState = 2;
-            }
+            Sleep(20);
+            
         }
 
 

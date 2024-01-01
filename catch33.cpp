@@ -1,13 +1,17 @@
 // textgame1.cpp
-// Just a test game to learn some c++
-// things falling from above and you have to catch them all...
-// made with the worst way possible
+// Just a test game to learn some c++ 
+// things falling from above and you have to catch them all! Game speeds up every HARDER_EVERY constant val
+// made with the worst way possible, no oop at all!
 
 #include <iostream>
+#include <fstream>
 #include <iomanip>  
 #include <windows.h>
+#include <string>
 
 using namespace std;
+fstream scorefile;
+
 
 
 #define GAME_WIDTH 55
@@ -35,10 +39,35 @@ int enemy_counter = 0;
 int enemies = 1;
 int step_counter = 0;
 int score = 0;
+int highscore = 0;
 int lives = 10;
 
 int catch_counter = 0;
 int game_level = 1;
+
+
+bool openFileForReading(const string& filename) {
+    scorefile.open(filename);
+    return scorefile.is_open();
+}
+
+int readFromFile() {
+    string line;
+    string content;
+    while (getline(scorefile, line)) {
+        content += line;
+    }
+    return stoi(content);
+}
+
+void writeToOutputFile(const string& content) {
+    scorefile << content << endl;
+}
+
+void closeFiles() {
+    scorefile.close();
+}
+
 
 // Moves the cursor to a specific position
 BOOL gotoxy(const WORD x, const WORD y) {
@@ -47,7 +76,6 @@ BOOL gotoxy(const WORD x, const WORD y) {
     xy.Y = y;
     return SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), xy);
 }
-
 
 // Creates the box
 void drawBox(int xmax , int ymax){
@@ -166,6 +194,7 @@ void initGame(){
     enemies = 1;
     step_counter = 0;
     score = 0;
+    // highscore = readFromFile();
     lives = LIVES;
     catch_counter = 0;
     game_level = 1;
@@ -176,7 +205,16 @@ void initGame(){
 }
 
 
+
+
 int main(){
+
+    if (!openFileForReading("highscore.txt")) {
+        cerr << "Error opening the input file." << endl;
+        return 1;
+    }
+
+    
     
     initGame();
     int rotation1 = 0; // a flag to give rotation animation to enemies
@@ -299,6 +337,9 @@ int main(){
 
             // Detect game over
             if(lives == 0){
+                if(score>highscore){
+                    writeToOutputFile(to_string(score));
+                }
                 gameState = 2;
             }
 
@@ -337,10 +378,19 @@ int main(){
             gotoxy(8, 9);
             cout << "\\____/\\_/ \\_/\\/  \\____/\\/ /_/ |____/____/" << endl;
 
-            gotoxy(15, 11);
+
+            // highscore
+            gotoxy(21,12);
+            cout << "Highest score:" << highscore << endl;
+            
+
+            gotoxy(15, 15);
             cout << "Press [A] key to Start game" << endl;
-            gotoxy(22, 12);
+            gotoxy(22, 16);
             cout << "CTRL+C to exit" << endl;
+
+
+            
 
             if (GetAsyncKeyState('A') & 0x8000) {
                 initGame();
@@ -366,5 +416,6 @@ int main(){
         
     }
 
+    closeFiles();
     return 0;
 }

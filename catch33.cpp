@@ -39,7 +39,7 @@ int enemy_counter = 0;
 int enemies = 1;
 int step_counter = 0;
 int score = 0;
-int highscore = 0;
+int highscore;
 int lives = 10;
 
 int catch_counter = 0;
@@ -47,17 +47,17 @@ int game_level = 1;
 
 
 bool openFileForReading(const string& filename) {
-    scorefile.open(filename);
+    scorefile.open(filename, ios::in);
     return scorefile.is_open();
 }
 
-int readFromFile() {
+string readFromFile() {
     string line;
-    string content;
-    while (getline(scorefile, line)) {
-        content += line;
-    }
-    return stoi(content);
+    string content = "10";
+    // while (getline(scorefile, line)) {
+    //     content += line;
+    // }
+    return content;
 }
 
 void writeToOutputFile(const string& content) {
@@ -194,7 +194,11 @@ void initGame(){
     enemies = 1;
     step_counter = 0;
     score = 0;
-    // highscore = readFromFile();
+    // string loch = readFromFile();
+    // int l = static_cast(loch);
+    //  int convertedNumber = static_cast<int>(readFromFile());
+    string s = readFromFile();
+    highscore = stoi(s);
     lives = LIVES;
     catch_counter = 0;
     game_level = 1;

@@ -9,6 +9,8 @@
 #include <windows.h>
 #include <string>
 
+
+
 using namespace std;
 fstream scorefile;
 
@@ -56,7 +58,7 @@ bool openFileForReading(const string& filename) {
 int readFromFile() {
     int textscore;
 
-    if (openFileForReading("highscore.txt")) {
+    if (openFileForReading("var/highscore.txt")) {
         // Reset the file position to the beginning
         scorefile.clear(); // Clear any error flags
         scorefile.seekg(0, ios::beg);
@@ -72,7 +74,7 @@ int readFromFile() {
 
 
 void writeToOutputFile(const int& content) {
-    if (openFileForReading("highscore.txt")) {
+    if (openFileForReading("var/highscore.txt")) {
         // int c = 22;
         // Reset the file position to the beginning
         scorefile.clear(); // Clear any error flags

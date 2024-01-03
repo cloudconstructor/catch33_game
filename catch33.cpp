@@ -51,13 +51,29 @@ bool openFileForReading(const string& filename) {
     return scorefile.is_open();
 }
 
-string readFromFile() {
-    string line;
-    string content = "10";
-    // while (getline(scorefile, line)) {
-    //     content += line;
-    // }
-    return content;
+
+int readFromFile() {
+    int textscore;
+
+    if (openFileForReading("highscore.txt")) {
+        // Reset the file position to the beginning
+        scorefile.clear(); // Clear any error flags
+        scorefile.seekg(0, ios::beg);
+        scorefile >> textscore;
+        scorefile.close(); // Close the file
+        
+    } else {
+        cerr << "Failed to open the file." << endl;
+    }
+
+    return textscore;
+}
+
+
+float readFloatFromFile(std::fstream& file) {
+    float value;
+    file >> value;
+    return value;
 }
 
 void writeToOutputFile(const string& content) {
@@ -194,11 +210,7 @@ void initGame(){
     enemies = 1;
     step_counter = 0;
     score = 0;
-    // string loch = readFromFile();
-    // int l = static_cast(loch);
-    //  int convertedNumber = static_cast<int>(readFromFile());
-    string s = readFromFile();
-    highscore = stoi(s);
+    highscore = readFromFile();
     lives = LIVES;
     catch_counter = 0;
     game_level = 1;
@@ -213,13 +225,6 @@ void initGame(){
 
 int main(){
 
-    if (!openFileForReading("highscore.txt")) {
-        cerr << "Error opening the input file." << endl;
-        return 1;
-    }
-
-    
-    
     initGame();
     int rotation1 = 0; // a flag to give rotation animation to enemies
     int rotation2 = 0; // a flag to give rotation animation to enemies

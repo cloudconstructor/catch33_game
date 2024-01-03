@@ -1,11 +1,16 @@
-#include <iostream>
-#include <fstream>
-#include <iomanip>  
-#include <windows.h>
-#include <string>
+/* ==========================================
+Filename: lib.h
+Author: George Droulias
+Email: d.cloud.constructor@gmail.com
+Created: 2023-1-3
+Updated: 2024-1-3
+Version: 0.1 
+Description: Lib file for catch33 game. Contains all functions. Made for learning purposes
+============================================*/
 
-using namespace std;
-fstream scorefile;
+
+
+#pragma once
 
 
 bool openFileForReading(const string& filename) {
@@ -158,3 +163,29 @@ void resetEnemy(int id, int enemyYPos){
     cout << " " << endl;
     refreshRandomCord(id);
 }
+
+// Reset everything
+void initGame(){
+    heroXpos = HERO_X_START;
+    heroYPos = HERO_Y;
+    enemySpeed = ENEMY_START_SPEED;
+    enemyYPos1 = 2;
+    enemyYPos2 = 2; 
+    enemyYPos3 = 2; 
+    enemyYPos4 = 2;
+
+    enemy_counter = 0;
+    enemies = 1;
+    step_counter = 0;
+    score = 0;
+    highscore = readFromFile();
+    lives = LIVES;
+    catch_counter = 0;
+    game_level = 1;
+
+    clearScreen();
+    drawBox(GAME_WIDTH, GAME_HEIGHT);
+    createRandomCords();
+}
+
+

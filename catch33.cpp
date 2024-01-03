@@ -39,7 +39,7 @@ int enemy_counter = 0;
 int enemies = 1;
 int step_counter = 0;
 int score = 0;
-int highscore;
+int highscore = 0;
 int lives = 10;
 
 int catch_counter = 0;
@@ -48,7 +48,7 @@ int game_level = 1;
 
 bool openFileForReading(const string& filename) {
     scorefile.open(filename, ios::in);
-    return scorefile.is_open();
+        return scorefile.is_open();
 }
 
 
@@ -69,15 +69,18 @@ int readFromFile() {
     return textscore;
 }
 
+void writeToOutputFile(const int& content) {
 
-float readFloatFromFile(std::fstream& file) {
-    float value;
-    file >> value;
-    return value;
-}
-
-void writeToOutputFile(const string& content) {
-    scorefile << content << endl;
+    if (openFileForReading("highscore.txt")) {
+        // Reset the file position to the beginning
+        scorefile.clear(); // Clear any error flags
+        scorefile.seekg(0, ios::beg);
+        scorefile << content << endl;
+        scorefile.close(); // Close the file
+        
+    } else {
+        cerr << "Failed to open the file." << endl;
+    }  
 }
 
 void closeFiles() {
@@ -150,7 +153,7 @@ int detectKeyPress(int heroPosition){
         }
     }
 
-    // Sleep(10);
+    
     return heroPosition;
 }
 
@@ -347,7 +350,7 @@ int main(){
             // Detect game over
             if(lives == 0){
                 if(score>highscore){
-                    writeToOutputFile(to_string(score));
+                    writeToOutputFile(score);
                 }
                 gameState = 2;
             }

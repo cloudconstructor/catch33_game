@@ -47,7 +47,8 @@ int game_level = 1;
 
 
 bool openFileForReading(const string& filename) {
-    scorefile.open(filename, ios::in);
+    // scorefile.open(filename, ios::in);
+    scorefile.open(filename);
         return scorefile.is_open();
 }
 
@@ -69,15 +70,15 @@ int readFromFile() {
     return textscore;
 }
 
-void writeToOutputFile(const int& content) {
 
+void writeToOutputFile(const int& content) {
     if (openFileForReading("highscore.txt")) {
+        // int c = 22;
         // Reset the file position to the beginning
         scorefile.clear(); // Clear any error flags
         scorefile.seekg(0, ios::beg);
         scorefile << content << endl;
         scorefile.close(); // Close the file
-        
     } else {
         cerr << "Failed to open the file." << endl;
     }  
@@ -147,7 +148,7 @@ int detectKeyPress(int heroPosition){
         }
     }
     if (GetAsyncKeyState(VK_RIGHT) & 0x8001){
-        if(heroPosition < GAME_WIDTH-1 ) {
+        if(heroPosition < (GAME_WIDTH-HERO_WIDTH) ) {
             heroPosition = heroPosition+HEROPSPEED;
             clearCharacter(heroPosition, HERO_Y, 0);
         }
@@ -174,20 +175,19 @@ void refreshRandomCord(int id){
 void drawEnemy(int id, int ypos, int rotation){
     int oldy = ypos-1;
     
-    // if(ypos <= GAME_HEIGHT){
-        if(oldy>1){
-            gotoxy(randcords[id] , oldy);    
-            cout << " " << endl;
-        }
+    
+    if(oldy>1){
+        gotoxy(randcords[id] , oldy);    
+        cout << " " << endl;
+    }
 
-        gotoxy(randcords[id] , ypos);
-        if(rotation == 1) cout << "|" << endl;
-        if(rotation == 2) cout << "\\" << endl;
-        if(rotation == 3) cout << "-" << endl;
-        if(rotation == 4) cout << "/" << endl;
-        // else cout << "@" << endl;
+    gotoxy(randcords[id] , ypos);
+    if(rotation == 1) cout << "|" << endl;
+    if(rotation == 2) cout << "\\" << endl;
+    if(rotation == 3) cout << "-" << endl;
+    if(rotation == 4) cout << "/" << endl;
         
-    // }
+    
 }
 
 // erase the enemy and refresh x position
@@ -199,8 +199,6 @@ void resetEnemy(int id, int enemyYPos){
 
 // Reset everything
 void initGame(){
-    // int randcords[4];
-    // gameState = 1;
     heroXpos = HERO_X_START;
     heroYPos = HERO_Y;
     enemySpeed = ENEMY_START_SPEED;
@@ -349,9 +347,6 @@ int main(){
 
             // Detect game over
             if(lives == 0){
-                if(score>highscore){
-                    writeToOutputFile(score);
-                }
                 gameState = 2;
             }
 
@@ -379,6 +374,8 @@ int main(){
 
         // Title Screen
         if(gameState == 0){
+
+            // Game logo
             gotoxy(8, 5);
             cout << "   ___   _   _____  ___        __________" << endl;
             gotoxy(8, 6);
@@ -391,18 +388,16 @@ int main(){
             cout << "\\____/\\_/ \\_/\\/  \\____/\\/ /_/ |____/____/" << endl;
 
 
-            // highscore
+            // Highest score recorded
             gotoxy(21,12);
             cout << "Highest score:" << highscore << endl;
             
-
+            // Game menu
             gotoxy(15, 15);
             cout << "Press [A] key to Start game" << endl;
             gotoxy(22, 16);
             cout << "CTRL+C to exit" << endl;
 
-
-            
 
             if (GetAsyncKeyState('A') & 0x8000) {
                 initGame();
@@ -414,18 +409,24 @@ int main(){
 
         // Game over screen
         if(gameState == 2){
+            
             gotoxy(24, 9);
             cout << "GAME OVER!" << endl;
+            gotoxy(21, 10);
+            cout << "Your score was:" << score << endl;
             gotoxy(15, 11);
+
+            // Save highscore
+            if(score > highscore){
+                writeToOutputFile(score);
+            }
             
             Sleep(5000);
             initGame();
             gameState = 0;
 
         }
-
-
-        
+       
     }
 
     closeFiles();

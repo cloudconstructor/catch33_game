@@ -59,6 +59,7 @@
   "files.associations": {
     "*.tpl": "html",
     "*.master": "html",
-    "iosfwd": "cpp"
+    "iosfwd": "cpp",
+    "*.tcc": "cpp"
   }
 }

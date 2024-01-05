@@ -189,3 +189,19 @@ void initGame(){
 }
 
 
+void SuccessSound(){
+    Beep(500, 100);  
+}
+
+void FailSound(){
+    Beep(370, 100);  
+}
+
+void introSound(){
+    Beep(500, 700);
+    // Sleep(10);
+    // Beep(500, 80);
+    // Beep(500, 80);
+    Beep(800, 700);
+
+}

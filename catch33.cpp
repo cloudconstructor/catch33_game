@@ -17,6 +17,8 @@ Game Purpose: Catch as many of the falling spinning things before you run out of
 int main(){
 
     initGame();
+    introSound();
+    
     int rotation1 = 0; // a flag to give rotation animation to enemies
     int rotation2 = 0; // a flag to give rotation animation to enemies
     int rotation3 = 0; // a flag to give rotation animation to enemies
@@ -47,10 +49,12 @@ int main(){
                         enemyYPos1 = 2;
                         score++;
                         catch_counter++;
+                        SuccessSound();
                     } else if(enemyYPos1 == GAME_HEIGHT){
                         resetEnemy(0, enemyYPos1);
                         enemyYPos1 = 2;
                         lives--;
+                        FailSound();
                     } else {
                         drawEnemy(0, enemyYPos1, rotation1);
                         enemyYPos1++;
@@ -67,10 +71,12 @@ int main(){
                         enemyYPos2 = 2;
                         score++;
                         catch_counter++;
+                        SuccessSound();
                     } else if(enemyYPos2 == GAME_HEIGHT){
                         resetEnemy(1, enemyYPos2);
                         enemyYPos2 = 2;
                         lives--;
+                        FailSound();
                     } else {
                         drawEnemy(1, enemyYPos2, rotation2);
                         enemyYPos2++;
@@ -86,10 +92,12 @@ int main(){
                         enemyYPos3 = 2;
                         score++;
                         catch_counter++;
+                        SuccessSound();
                     } else if(enemyYPos3 == GAME_HEIGHT){
                         resetEnemy(2, enemyYPos3);
                         enemyYPos3 = 2;
                         lives--;
+                        FailSound();
                     } else {
                         drawEnemy(2, enemyYPos3, rotation3);
                         enemyYPos3++;
@@ -104,10 +112,12 @@ int main(){
                         enemyYPos4 = 2;
                         score++;
                         catch_counter++;
+                        SuccessSound();
                     } else if(enemyYPos4 == GAME_HEIGHT){
                         resetEnemy(3, enemyYPos4);
                         enemyYPos4 = 2;
                         lives--;
+                        FailSound();
                     } else {
                         drawEnemy(3, enemyYPos4, rotation4);
                         enemyYPos4++;

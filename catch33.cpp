@@ -220,6 +220,7 @@ int main(){
             if(score > highscore){
                 writeToOutputFile(score);
             }
+            GameOver();
             
             Sleep(5000);
             initGame();

@@ -146,7 +146,7 @@ int main(){
             }
 
             // Detect game over
-            if(lives == 0){
+            if(lives <= 0){
                 gameState = 2;
             }
 

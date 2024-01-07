@@ -194,7 +194,7 @@ void SuccessSound(){
 }
 
 void FailSound(){
-    Beep(400, 150);  
+    Beep(400, 100);  
 }
 
 void GameOver(){
